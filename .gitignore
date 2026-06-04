@@ -1,0 +1,27 @@
+# Python cache & compiles
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Jupyter Notebooks & checkpoints
+*.ipynb
+1_Data_Analysis.ipynb
+2_Modeling.ipynb
+.ipynb_checkpoints/
+
+# Development notebooks & local settings
+.vscode/
+.idea/
+
+# Large development data files not required by the running web app
+ag_news_train.csv
+ag_news_test.csv
+train_test_split.pkl
+
