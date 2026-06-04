@@ -1,31 +1,33 @@
-# News Topic Classification Using Machine Learning and Deep Learning
+# 📰 News Topic Classification using Machine Learning & Deep Learning
 
-## Project Overview
-
-News articles are generated at an enormous scale every day across digital platforms. Automatically categorizing news into predefined topics is an important Natural Language Processing (NLP) task that helps news aggregators, search engines, recommendation systems, and media organizations organize content efficiently.
-
-This project develops an end-to-end News Topic Classification system capable of automatically assigning a news article to one of four categories:
-
-* World
-* Sports
-* Business
-* Sci/Tech
-
-The project explores both traditional machine learning and deep learning approaches to understand how different techniques perform on short news articles. The complete workflow includes data preprocessing, exploratory data analysis, feature engineering, model training, performance evaluation, error analysis, and deployment through an interactive Streamlit application.
+Deploy Link: [news-topic-classification.streamlit.app](https://news-topic-classification.streamlit.app)
 
 ---
 
-## Dataset
+## 📖 About the Project
 
-The project uses the AG News Dataset, one of the most widely used benchmark datasets for text classification research.
+### Problem Statement
+* News articles are generated at an enormous scale every day across digital platforms.
+* Automatically categorizing news into predefined topics is an important Natural Language Processing (NLP) task.
+* Categorization helps news aggregators, search engines, recommendation systems, and media organizations organize content efficiently.
+* Short news descriptions and titles present unique challenges due to limited vocabulary size and context.
 
-### Dataset Statistics
+### Aim
+* Automatically assign a news article to one of four categories: World, Sports, Business, or Sci/Tech.
+* Explore both traditional machine learning (Naive Bayes, Logistic Regression, Linear SVM) and deep learning (BiLSTM) approaches on short news articles.
 
-* Total Articles: 120,000
-* Number of Classes: 4
-* Balanced Dataset: 30,000 samples per class
+---
 
-### Categories
+## 📊 Dataset Information
+
+### Context
+* The project uses the AG News Dataset, one of the most widely used benchmark datasets for text classification research.
+
+### Content & Statistics
+* **Total Articles:** 120,000
+* **Number of Classes:** 4 (Balanced dataset: 30,000 samples per class)
+* **Dataset Quality:** 0 missing values, 0 duplicate records
+* **Word Count Statistics (Cleaned):** Mean length of ~19 words, 95th percentile of ~28 words, and 99th percentile of ~39 words.
 
 | Label | Topic    |
 | ----- | -------- |
@@ -34,317 +36,126 @@ The project uses the AG News Dataset, one of the most widely used benchmark data
 | 3     | Business |
 | 4     | Sci/Tech |
 
-Each sample consists of a news title and a short news description.
-
-Example:
-
-**Title:** Oil prices soar to all-time record
-
-**Description:** Global oil prices reached record highs amid concerns over supply shortages and geopolitical tensions.
-
-**Topic:** Business
-
-The balanced nature of the dataset eliminates class imbalance issues and allows fair comparison between different classification algorithms.
-
----
-
-## Data Preprocessing
-
-Raw news articles often contain noisy information such as HTML remnants, encoded characters, URLs, and publisher-specific metadata. Before model training, extensive text cleaning was performed.
-
-### Preprocessing Pipeline
-
-1. Convert text to lowercase
-2. Remove URLs and web links
-3. Remove special characters and punctuation
-4. Remove Reuters and news source artifacts
-5. Tokenize text using spaCy
-6. Lemmatize words using spaCy
-7. Remove stopwords using NLTK
-8. Remove very short tokens and numerical noise
-
 ### Example
-
-**Original Text**
-
-Reuters - Private investment firm Carlyle Group has shown interest in expanding its aerospace investments.
-
-**Processed Text**
-
-private investment firm carlyle group show interest expand aerospace investment
-
-This preprocessing stage significantly reduces vocabulary noise while preserving meaningful semantic information.
+* **Title:** Oil prices soar to all-time record
+* **Description:** Global oil prices reached record highs amid concerns over supply shortages and geopolitical tensions.
+* **Topic:** Business
 
 ---
 
-## Exploratory Data Analysis (EDA)
+## ⚙️ Model Training & ML Techniques
 
-A comprehensive exploratory analysis was performed to better understand the dataset characteristics.
+1. **Data Preprocessing**:
+   - Convert text to lowercase.
+   - Remove URLs, web links, special characters, and punctuation.
+   - Clean news source publisher artifacts (e.g., "Reuters - ").
+   - Tokenize and lemmatize using `spaCy`.
+   - Remove stopwords using `NLTK` and exclude numerical noise.
+   * *Example:*
+     * **Original:** `Reuters - Private investment firm Carlyle Group has shown interest in expanding its aerospace investments.`
+     * **Processed:** `private investment firm carlyle group show interest expand aerospace investment`
 
-### Dataset Quality
+2. **Feature Engineering**:
+   - Numerical text representations generated using TF-IDF (Term Frequency-Inverse Document Frequency).
+   - **TF-IDF Configuration:** Maximum 20,000 features, Unigrams + Bigrams, vocabulary filtering applied.
 
-* Missing Values: 0
-* Duplicate Records: 0
-* Balanced Class Distribution
+3. **Model Selection**:
+   - Compared traditional probabilistic models (Multinomial Naive Bayes), linear boundaries (Logistic Regression), support vector classifiers (Linear SVM), and recurrent deep learning architectures (BiLSTM).
+   - Deployed the **Linear SVM Classifier** for its optimal accuracy and low computational overhead.
 
-### Article Length Analysis
-
-The cleaned dataset contains relatively short news descriptions.
-
-#### Word Count Statistics
-
-* Mean Length: ~19 words
-* 95th Percentile: ~28 words
-* 99th Percentile: ~39 words
-
-These observations helped determine the optimal sequence length used later in the BiLSTM model.
-
-### Character Count Analysis
-
-Character-level statistics were analyzed to understand document complexity and distribution patterns.
-
-### Vocabulary Analysis
-
-The project examined:
-
-* Most frequent words
-* Category-wise frequent words
-* Vocabulary size
-* Word clouds
-* N-gram distributions
-
-Distinct vocabularies emerged across categories:
-
-#### Sports
-
-game, season, team, league, victory
-
-#### Business
-
-market, company, stock, profit, economy
-
-#### World
-
-government, president, country, minister, election
-
-#### Sci/Tech
-
-software, internet, technology, computer, microsoft
-
-These patterns indicate that topic-specific language plays a significant role in classification performance.
+4. **Deep Learning Architecture (BiLSTM)**:
+   - Input Text → Embedding Layer → Bidirectional LSTM → Global Max Pooling → Dense Layer → Softmax.
+   - Regularized using Dropout, Recurrent Dropout, L2 Regularization, Early Stopping, and Learning Rate Reduction.
 
 ---
 
-## Feature Engineering
+## 🔍 Key Findings & Error Analysis
 
-For traditional machine learning models, text was converted into numerical representations using TF-IDF (Term Frequency-Inverse Document Frequency).
+### Key Findings
+* **Classical ML Efficiency:** Traditional machine learning models remain highly competitive for short-text classification tasks. Linear SVM achieved the best overall performance while requiring significantly fewer computational resources than BiLSTM.
+* **Deep Learning Overfitting:** The BiLSTM model did not significantly outperform traditional machine learning approaches and was prone to overfitting under limited word sequence lengths.
+* **Semantic Overlap:** Business and Sci/Tech categories exhibit substantial semantic overlap, making them the most challenging classes to separate.
+* **Representation Power:** For short, structured news descriptions, keyword-based representations such as TF-IDF remain extremely effective.
 
-### TF-IDF Configuration
-
-* Maximum Features: 20,000
-* N-grams: Unigrams + Bigrams
-* Vocabulary Filtering: Applied
-
-TF-IDF captures the importance of words within a document while reducing the influence of commonly occurring terms.
-
----
-
-## Machine Learning Models
-
-Three traditional machine learning models were trained and evaluated.
-
-### Multinomial Naive Bayes
-
-A probabilistic classifier commonly used for text classification tasks.
-
-### Logistic Regression
-
-A linear classification algorithm capable of learning decision boundaries using TF-IDF features.
-
-### Linear Support Vector Machine (SVM)
-
-A powerful margin-based classifier particularly effective for high-dimensional sparse text representations.
+### Error Analysis Insights
+* **Business ↔ Sci/Tech Confusion:** The largest source of errors. Technology company earnings, product launches, telecommunications announcements, and corporate acquisitions naturally share vocabulary from both categories.
+* **World ↔ Business Confusion:** Occurs frequently in articles covering international trade, economic agreements, energy markets, and geopolitical developments.
+* **Sports Classification:** Demonstrated the highest separability because of highly distinctive, topic-specific vocabulary (e.g., game, season, team, league, victory) and limited overlap with other categories.
 
 ---
 
-## Deep Learning Model
+## 🛠️ Technology Stack
 
-A Bidirectional Long Short-Term Memory (BiLSTM) network was implemented to capture contextual information from both past and future words in a sentence.
-
-### Architecture
-
-Input Text
-
-↓
-
-Embedding Layer
-
-↓
-
-Bidirectional LSTM
-
-↓
-
-Global Max Pooling
-
-↓
-
-Dense Layer
-
-↓
-
-Softmax Output Layer
-
-### Regularization Techniques
-
-* Dropout
-* Recurrent Dropout
-* L2 Regularization
-* Early Stopping
-* Learning Rate Reduction
-
-These techniques were introduced to reduce overfitting and improve generalization performance.
+* **Language**: Python
+* **Dashboard**: Streamlit (premium light-slate theme with Outfit typography)
+* **ML/DL Libraries**: Scikit-learn, TensorFlow/Keras, spaCy, NLTK, Joblib/Pickle
+* **Visuals**: Plotly, Matplotlib, WordCloud
+* **Data**: Pandas, NumPy
 
 ---
 
-## Model Evaluation
+## 📂 Project Structure
 
-All models were evaluated using the same train-test split to ensure fair comparison.
-
-### Performance Results
-
-| Model               | Accuracy |
-| ------------------- | -------- |
-| Naive Bayes         | 89.74%   |
-| Logistic Regression | 90.35%   |
-| Linear SVM          | 90.49%   |
-| BiLSTM              | ~90.0%   |
-
-### Best Performing Model
-
-Linear SVM achieved the highest classification accuracy of 90.49%.
-
-Interestingly, the deep learning model did not significantly outperform traditional machine learning approaches despite its higher computational complexity.
-
----
-
-## Error Analysis
-
-To better understand model behavior, incorrectly classified samples were manually analyzed.
-
-### Major Observations
-
-#### Business ↔ Sci/Tech Confusion
-
-The largest source of classification errors occurred between Business and Sci/Tech categories.
-
-Examples include:
-
-* Technology company earnings
-* Product launches
-* Telecommunications announcements
-* Corporate acquisitions
-
-These articles naturally contain vocabulary belonging to both categories.
-
-#### World ↔ Business Confusion
-
-Articles involving:
-
-* International trade
-* Economic agreements
-* Energy markets
-* Geopolitical developments
-
-often overlapped between World and Business topics.
-
-#### Sports Classification
-
-Sports articles demonstrated the highest separability because of highly distinctive vocabulary and limited overlap with other categories.
+```
+News-Topic-Classification/
+├── app.py                      # Streamlit entry point
+├── utils.py                    # Custom theme styling, metric cards, and data/model loaders
+├── svm.pkl                     # Deployed Linear SVM model
+├── tfidf.pkl                   # Trained TF-IDF Vectorizer
+├── agnews_clean.csv            # Cleaned news dataset (used for EDA)
+├── requirements.txt            # Package requirements with wheel paths for deployment
+├── .gitignore                  # Git exclusion rules
+├── .streamlit/
+│   └── config.toml             # Custom theme settings and sidebar configurations
+├── pages/
+│   ├── home.py                 # Home/overview dashboard page
+│   ├── eda.py                  # Exploratory Data Analysis page
+│   ├── prediction.py           # Real-time topic prediction page
+│   ├── comparison.py           # Model comparison and key findings page
+│   └── about.py                # Tech stack & dataset metadata page
+├── 1_Data_Analysis.ipynb       # [Ignored] Exploratory analysis notebook
+└── 2_Modeling.ipynb           # [Ignored] Model training notebook
+```
 
 ---
 
-## Key Findings
+## 🚀 Quick Start
 
-### Finding 1
+### 1. Clone the repository
+```bash
+git clone https://github.com/varunkaza20/News-Topic-Classification-using-ML-and-DL.git
+cd News-Topic-Classification
+```
 
-Traditional machine learning models remain highly competitive for short-text classification tasks.
+### 2. Set up virtual environment
+```bash
+python -m venv .venv
+.venv\Scripts\activate        # Windows
+# source .venv/bin/activate   # macOS / Linux
+```
 
-### Finding 2
+### 3. Install dependencies
+```bash
+pip install -r requirements.txt
+```
 
-Linear SVM achieved the best overall performance while requiring significantly less computational resources than BiLSTM.
-
-### Finding 3
-
-Business and Sci/Tech categories exhibit substantial semantic overlap, making them the most challenging classes to separate.
-
-### Finding 4
-
-The balanced nature of the dataset contributed to stable performance across all categories.
-
-### Finding 5
-
-For short news descriptions, keyword-based representations such as TF-IDF remain extremely effective.
-
----
-
-## Real-Time Inference System
-
-The final model was integrated into a real-time inference pipeline.
-
-### Prediction Workflow
-
-User Input
-
-↓
-
-Text Preprocessing
-
-↓
-
-TF-IDF Transformation
-
-↓
-
-Linear SVM Classification
-
-↓
-
-Predicted Topic
-
-The system can classify unseen news articles into one of the four predefined categories in real time.
+### 4. Run the app
+```bash
+streamlit run app.py
+```
 
 ---
 
-## Deployment
+## 📊 Model Performance Comparison
 
-The project is deployed through a Streamlit web application featuring:
+| Model | Accuracy |
+|-------|----------|
+| **Linear SVM** *(deployed)* | **90.49%** |
+| Logistic Regression | 90.35% |
+| BiLSTM | ~90.00% |
+| Multinomial Naive Bayes | 89.74% |
 
-### Exploratory Data Analysis Dashboard
-
-Interactive visualizations showing:
-
-* Class distributions
-* Word distributions
-* Vocabulary statistics
-* Word clouds
-* Topic-wise analysis
-
-### Real-Time News Classification
-
-Users can paste any news article and instantly receive a predicted topic.
-
-### Model Comparison Dashboard
-
-Interactive comparison of:
-
-* Accuracy
-* Model performance
-* Key findings
-* Error analysis insights
-
----
-
-## Conclusion
-
-This project demonstrates a complete NLP workflow for automatic news categorization. Through extensive experimentation, traditional machine learning models, particularly Linear SVM combined with TF-IDF features, achieved the best balance between accuracy, efficiency, and interpretability. The results highlight that for short structured news articles, classical machine learning approaches remain highly effective and can compete with more complex deep learning architectures.
+### Why Linear SVM was chosen for deployment:
+* **Top Accuracy:** Reached the highest classification accuracy of 90.49% on the test split.
+* **Low Latency:** SVM inference is extremely fast and executes in milliseconds on CPU, which is ideal for real-time web interface response times.
+* **Simplicity and Efficiency:** Despite its architectural complexity and much longer training time, the BiLSTM model suffered from overfitting and did not outperform the linear classifier on short news descriptions.
