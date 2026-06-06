@@ -1,6 +1,6 @@
 # 📰 News Topic Classification using Machine Learning & Deep Learning
 
-Deploy Link: [news-topic-classification.streamlit.app](https://news-topic-classification.streamlit.app)
+Deploy Link: [news-topic-classification.streamlit-using-ml.app](https://news-topic-classification-using-ml.streamlit.app/)
 
 ---
 
